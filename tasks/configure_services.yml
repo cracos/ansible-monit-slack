@@ -1,0 +1,29 @@
+---
+
+- name: deleting files tmp files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ monit_conf_path }}services_monit"
+    - "{{ monit_conf_path }}services_preconfig"
+
+- name: getting name services
+  lineinfile:
+    dest: "{{ monit_conf_path }}services_monit"
+    line: "{{ item }}"
+    insertbefore: BOF
+    state: present
+    create: True
+  with_items:
+    - "{{ monit_services }}"
+
+- name: sort file: services_monit
+  shell: sort {{ monit_conf_path }}services_monit.txt -o {{ monit_conf_path }}services_monit.txt
+
+- name: scan all services on the SO
+  shell: service --status-all | awk '/+/ { print $4 }' > {{ monit_conf_path }}services_all.txt
+
+- name: filtering up services
+  shell: comm -12 {{ monit_conf_path }}services_all.txt {{ monit_conf_path }}services_monit.txt
+  register: data

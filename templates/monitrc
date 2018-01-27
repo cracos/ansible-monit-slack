@@ -1,0 +1,33 @@
+###############################################################################
+## Monit control file
+## Global section
+###############################################################################
+
+set da22emon 300
+  with start delay 60
+
+set logfile /var/log/monit.log
+
+set idfile /var/lib/monit/id
+
+set statefile /var/lib/monit/state
+
+set eventqueue
+  basedir /var/lib/monit/events
+  slots 100
+
+set httpd port 5000 and
+  allow localhost
+  allow admin:pass
+
+###############################################################################
+## Services
+###############################################################################
+
+
+###############################################################################
+## Includes
+###############################################################################
+
+include /etc/monit/conf.d/*
+include /etc/monit/conf-enabled/*

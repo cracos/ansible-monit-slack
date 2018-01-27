@@ -1,0 +1,14 @@
+---
+
+monit_init_file: /etc/default/monit
+monit_conf_path: /etc/monit/
+
+##MONIT SERVICES
+monit_services:
+  - ssh
+  - rsyslog
+  - nginx
+  - mysql
+  - exim4
+  - cron
+  - acpid
