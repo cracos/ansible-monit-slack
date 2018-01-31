@@ -1,16 +1,16 @@
 ---
 
-- name: Monit | Ensure monit can start
+- name: CONF_BASE | Ensure monit can start
   lineinfile:
     dest: "{{ monit_init_file }}"
     line: "startup=1"
     insertbefore: "START=yes"
     state: present
 
-- name: Monit | Update the monit configuration (/etc/monit/monitrc)
+- name: CONF_BASE | Update the monit configuration (/etc/monit/monitrc)
   template:
     src: "monitrc"
-    dest: "/etc/monit/monitrc"
+    dest: "{{ monit_path }}monitrc"
     mode: 0600
     owner: root
     group: root

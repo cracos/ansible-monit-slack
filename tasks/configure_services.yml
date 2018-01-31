@@ -1,29 +1,54 @@
 ---
 
-- name: deleting files tmp files
+- name: CONF_SERVICES | scan all running services on the SO
+  shell: service --status-all | awk '/\+/ {print $4}'
+  register: running_services
+
+- name: CONF_SERVICES | ensure directory conf paths exist
   file:
-    path: "{{ item }}"
-    state: absent
+    path: "{{ monit_path }}{{ item }}"
+    state: directory
+    mode: 0755
   with_items:
-    - "{{ monit_conf_path }}services_monit"
-    - "{{ monit_conf_path }}services_preconfig"
+    - conf-enabled
+    - conf-available
+    - conf.d
 
-- name: getting name services
-  lineinfile:
-    dest: "{{ monit_conf_path }}services_monit"
-    line: "{{ item }}"
-    insertbefore: BOF
-    state: present
-    create: True
+- name: CONF_SERVICES | copy conf-available files
+  template:
+    src: "{{ item }}"
+    dest: "{{ monit_path }}conf-available/{{ item | basename | regex_replace('.j2','')}}"
+    mode: 0644
+    owner: root
+    group: root
+  with_fileglob:
+    - ../templates/conf-available/*.*
+
+- name: CONF_SERVICES | scan conf-available 
+  shell: ls /etc/monit/conf-available/
+  register: conf_available
+
+# - name: running
+#   debug: msg="{{ running_services.stdout_lines }}"
+
+# - name: lista
+#   debug: msg="{{ monit_process }}"
+
+# - name: available
+#   debug: msg="{{ conf_available.stdout_lines }}"
+
+# - name: final list
+#   debug: msg="{{ running_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) }}"
+
+- name: CONF_SERVICES | enable process for monitoring
+  file:
+    src: "{{ monit_path }}conf-available/{{ item }}"
+    dest: "{{ monit_path }}conf-enabled/{{ item }}"
+    state: link
+    owner: root
+    group: root
   with_items:
-    - "{{ monit_services }}"
+    - "{{ running_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) }}"
+  notify: restart monit
 
-- name: sort file: services_monit
-  shell: sort {{ monit_conf_path }}services_monit.txt -o {{ monit_conf_path }}services_monit.txt
-
-- name: scan all services on the SO
-  shell: service --status-all | awk '/+/ { print $4 }' > {{ monit_conf_path }}services_all.txt
-
-- name: filtering up services
-  shell: comm -12 {{ monit_conf_path }}services_all.txt {{ monit_conf_path }}services_monit.txt
-  register: data
+# - name CONF_SERVICES | 

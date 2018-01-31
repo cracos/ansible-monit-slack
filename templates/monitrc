@@ -3,7 +3,7 @@
 ## Global section
 ###############################################################################
 
-set da22emon 300
+set daemon 300
   with start delay 60
 
 set logfile /var/log/monit.log
@@ -18,7 +18,7 @@ set eventqueue
 
 set httpd port 5000 and
   allow localhost
-  allow admin:pass
+  # allow admin:pass
 
 ###############################################################################
 ## Services

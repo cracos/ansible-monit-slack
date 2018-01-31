@@ -1,10 +1,10 @@
 ---
 
 monit_init_file: /etc/default/monit
-monit_conf_path: /etc/monit/
+monit_path: /etc/monit/
 
-##MONIT SERVICES
-monit_services:
+## MONIT SERVICES
+monit_process:
   - ssh
   - rsyslog
   - nginx
@@ -12,3 +12,14 @@ monit_services:
   - exim4
   - cron
   - acpid
+
+monit_process_by_name: []
+monit_file: []
+monit_fifo: []
+monit_filesystem: []
+monit_directory: []
+monit_host: []
+monit_system: []
+monit_program: []
+monit_network: []
+monit_network_by_interface: []
