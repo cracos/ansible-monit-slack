@@ -12,6 +12,7 @@ monit_process:
   - exim4
   - cron
   - acpid
+  - atd
 
 monit_process_by_name: []
 monit_file: []

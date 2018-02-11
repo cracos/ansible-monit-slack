@@ -16,9 +16,11 @@ set eventqueue
   basedir /var/lib/monit/events
   slots 100
 
-set httpd port 5000 and
+set httpd port 5000
   allow localhost
-  # allow admin:pass
+  allow admin:pass
+  allow guest:guest read-only
+  allow 0.0.0.0/0.0.0.0
 
 ###############################################################################
 ## Services

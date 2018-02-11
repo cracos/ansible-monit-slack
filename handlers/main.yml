@@ -7,3 +7,4 @@
 
 - name: reload monit
   command: "monit reload"
+  become: yes

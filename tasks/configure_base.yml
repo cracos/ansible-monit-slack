@@ -7,6 +7,17 @@
     insertbefore: "START=yes"
     state: present
 
+- name: CONF_BASE | ensure directory conf paths exist
+  file:
+    path: "{{ monit_path }}{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - conf-enabled
+    - conf-available/templates
+    - conf-available/basic
+    - conf.d
+
 - name: CONF_BASE | Update the monit configuration (/etc/monit/monitrc)
   template:
     src: "monitrc"

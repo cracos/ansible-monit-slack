@@ -4,20 +4,10 @@
   shell: service --status-all | awk '/\+/ {print $4}'
   register: running_services
 
-- name: CONF_SERVICES | ensure directory conf paths exist
-  file:
-    path: "{{ monit_path }}{{ item }}"
-    state: directory
-    mode: 0755
-  with_items:
-    - conf-enabled
-    - conf-available
-    - conf.d
-
-- name: CONF_SERVICES | copy conf-available files
+- name: CONF_SERVICES | copy conf-available templates
   template:
     src: "{{ item }}"
-    dest: "{{ monit_path }}conf-available/{{ item | basename | regex_replace('.j2','')}}"
+    dest: "{{ monit_path }}conf-available/templates/{{ item | basename | regex_replace('.j2','')}}"
     mode: 0644
     owner: root
     group: root
@@ -25,8 +15,24 @@
     - ../templates/conf-available/*.*
 
 - name: CONF_SERVICES | scan conf-available 
-  shell: ls /etc/monit/conf-available/
+  shell: ls /etc/monit/conf-available/templates/
   register: conf_available
+
+- name: CONF_SERVICES | enable list process for monitoring when is defined
+  file:
+    src: "{{ monit_path }}conf-available/templates/{{ item }}"
+    dest: "{{ monit_path }}conf-enabled/{{ item }}"
+    state: link
+    owner: root
+    group: root
+  with_items:
+    - "{{ running_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) }}"
+  notify: reload monit
+  when: monit_process is defined
+
+# - name: CONF_SERVICES | scan conf-enabled 
+#   shell: ls /etc/monit/conf-enabled/
+#   register: conf_enabled
 
 # - name: running
 #   debug: msg="{{ running_services.stdout_lines }}"
@@ -37,18 +43,37 @@
 # - name: available
 #   debug: msg="{{ conf_available.stdout_lines }}"
 
-# - name: final list
+# - name: enabled
+#   debug: msg="{{ conf_enabled.stdout_lines }}"
+
+# - name: final templates list
 #   debug: msg="{{ running_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) }}"
 
-- name: CONF_SERVICES | enable process for monitoring
+# - name: final test
+#   debug: msg="{{ running_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) }}"
+
+- name: CONF_SERVICES |  create basic templates for process not in conf-available
+  blockinfile:
+    path: "{{ monit_path }}conf-available/basic/{{ item }}"
+    marker: "## <-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+       check process {{ item }}
+          matching "{{ item }}"
+          start program  = "/etc/init.d/{{ item }} start"
+          stop program  = "/etc/init.d/{{ item }} stop"
+    state: present
+    create: yes
+  with_items:
+    - "{{ running_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) }}"
+
+- name: CONF_SERVICES | enable list process for monitoring when is defined
   file:
-    src: "{{ monit_path }}conf-available/{{ item }}"
+    src: "{{ monit_path }}conf-available/basic/{{ item }}"
     dest: "{{ monit_path }}conf-enabled/{{ item }}"
     state: link
     owner: root
     group: root
   with_items:
-    - "{{ running_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) }}"
-  notify: restart monit
-
-# - name CONF_SERVICES | 
+    - "{{ running_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) }}"
+  notify: reload monit
+  when: monit_process is defined
