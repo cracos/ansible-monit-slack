@@ -4,6 +4,12 @@ monit_init_file: /etc/default/monit
 monit_path: /etc/monit/
 
 ## MONIT SERVICES
+monit_auto: no
+monit_banned:
+  - getty@tty1
+  - ifup@eth0
+  - networking
+
 monit_process:
   - ssh
   - rsyslog

@@ -1,5 +1,7 @@
 ---
 
 - include_tasks: setup-Debian.yml
-- include_tasks: configure_base.yml
-- include_tasks: configure_services.yml
+
+- include_tasks: conf_base.yml
+
+- include_tasks: conf_ul_services.yml 
