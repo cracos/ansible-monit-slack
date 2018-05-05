@@ -1,0 +1,45 @@
+#!/bin/bash
+
+URL={{ slack_url }}
+
+case $MONIT_EVENT in
+  *"not changed"*|*"doesn't match"*|*"changed not"*)
+    COLOR="#FACC2E"
+    PRIORITY="WARNING!"
+    ;;
+  *"match"*|*"changed"*|*"Timeout"*)
+    COLOR="#FE9A2E"
+    PRIORITY="WARNING!"
+    ;;
+  *"failed"*|*"error"*|*"Invalid"*|*"not exist"*|*"matched"*|*"down"*|*"exceeded"*)
+    COLOR="#FF0000"
+    PRIORITY="CRITICAL!"
+    ;;
+  *"done"*|*"succeeded"*|*"Exists"*|*"recovery"*|*"up"*|*"ok"*)
+    COLOR="#088A08"
+    PRIORITY="OK"
+    ;;
+  *)
+    COLOR="#848484"
+    PRIORITY="INFORMATIVE"
+    ;;
+esac
+
+TEXT=$(echo -e "$MONIT_SERVICE - $MONIT_EVENT: $MONIT_DESCRIPTION" | python3 -c "import json,sys;print(json.dumps(sys.stdin.read()))")
+
+PAYLOAD="{
+  \"attachments\": [
+    {
+    	\"pretext\": \"HOST - $MONIT_HOST\",
+    	\"text\": $TEXT,
+    	\"color\": \"$COLOR\",
+    	\"mrkdwn_in\": [\"text\"],
+    	\"fields\": [
+    	  { \"title\": \"Date\", \"value\": \"$MONIT_DATE\", \"short\": true },
+    	  { \"title\": \"Priority\", \"value\": \"$PRIORITY\", \"short\": true }
+      ]
+    }
+  ]
+}"
+
+curl -s -X POST --data-urlencode "payload=$PAYLOAD" $URL

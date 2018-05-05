@@ -3,7 +3,7 @@
 ## Global section
 ###############################################################################
 
-set daemon 60
+set daemon 180
   with start delay 60
 
 set logfile /var/log/monit.log
@@ -22,9 +22,21 @@ set httpd port 5000
   allow guest:guest read-only
   allow 0.0.0.0/0.0.0.0
 
+set alert admeg@autlook.com
+
 ###############################################################################
 ## Services
 ###############################################################################
+
+check system $HOST
+  if loadavg (1min) > 4 then {{ slack_exa }}
+  if loadavg (5min) > 2 then {{ slack_exa }}
+  if memory usage > 75% for 4 cycles then {{ slack_exa }}
+  if swap usage > 25% for 4 cycles then {{ slack_exa }}
+  if cpu usage > 95% for 10 cycles then {{ slack_exa }}
+  if cpu usage (user) > 70% for 2 cycles then {{ slack_exa }}
+  if cpu usage (system) > 30% for 2 cycles then {{ slack_exa }}
+  if cpu usage (wait) > 20% for 2 cycles then {{ slack_exa }}
 
 
 ###############################################################################

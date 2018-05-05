@@ -3,7 +3,10 @@
    group ntpd
    start program = "/etc/init.d/openntpd start"
    stop  program = "/etc/init.d/openntpd stop"
+   if changed pid then {{ slack_ale }}
    if 4 restarts within 12 cycles then timeout
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend ntpd_bin
    depend ntpd_rc
 

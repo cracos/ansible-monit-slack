@@ -1,0 +1,160 @@
+---
+
+# - name: CONF_UL | service-scan all running services on the OS
+#   shell: service --status-all | awk '/\+/ {print $4}'
+#   register: service_services
+
+# - name: running service
+#   debug: msg="{{ service_services.stdout_lines }}"
+
+# - name: running systemctl
+#   debug: msg="{{ systemctl_services.stdout_lines }}"
+
+# - name: list by user
+#   debug: msg="{{ monit_process }}"
+
+# - name: banned list
+#   debug: msg="{{ monit_banned }}"
+
+# - name: running systctl&service
+#   debug: msg="{{ systemctl_services.stdout_lines }}"
+
+# - name: available templates
+#   debug: msg="{{ conf_available.stdout_lines }}"
+
+# - name: running AUTO template
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"
+#   when: monit_auto
+
+# - name: running AUTO basic
+#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned )}}"
+#   when: monit_auto
+
+# - name: running SEMI-AUTO templates
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+
+# - name: running SEMI-AUTO basic
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+
+#for the process id number to obtain command for monit procmatch
+# ps o command= 422 | awk -v f=1 -v t=4 '{for(i=f;i<=t;i++) printf("%s%s",$i,(i==t)?"\n":OFS)}' | sed 's/ *$//'
+
+# FragmentPath
+# cat nginx.service | grep ExecStart= | awk '{gsub("ExecStart=","",$1); print $1}'
+
+
+
+
+
+
+
+
+
+
+
+
+# - name: running systemctl
+#   debug: msg="{{ systemctl_services.stdout_lines }}"
+
+# - name: list by user
+#   debug: msg="{{ monit_process }}"
+
+# - name: banned list
+#   debug: msg="{{ monit_banned }}"
+
+# - name: available templates
+#   debug: msg="{{ conf_available.stdout_lines }}"
+
+# - name: running AUTO template
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"
+#   when: monit_auto
+
+# - name: running AUTO basic
+#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned ) }}"
+#   when: monit_auto
+
+# - name: running SEMI templates
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+#   when: not monit_auto
+
+# - name: running SEMI basic
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+#   when: not monit_auto
+
+# - name: systemctl
+#   systemd: state=started name=nginx
+
+
+MONIT_EVENT=Report MONIT_DESCRIPTION=`/etc/monit/slackReport.sh` \
+MONIT_HOST=`hostname` MONIT_DATE=`date -R` MONIT_COLOR="#808080" \
+  /etc/monit/slackAlert.sh
+
+- name: construct logfile
+  lineinfile:
+    path: /etc/monit/config.log
+    insertafter: EOF
+    state: present
+    create: yes
+    line: "{{ item.title }}\nDATE: {{ item.date }}\n{{ item.list }}\n"
+  with_items:
+    - title: "Available Configuration Templates"
+      date: "{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+      list: "{{ conf_available.stdout }}"
+    - title: "Services Running on the SO"
+      date: "{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+      list: "{{ systemctl_services.stdout }}"
+    # - title: "Services by Full Templates"
+    #   date: "{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+    #   list: "{{ services_by_templates | list }}"
+    # - title: "Services by Basic Autotemplates"
+    #   date: "{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+    #   list: "{{ services_by_autotemplates | list }}"
+  when: flg == "ls"
+
+- name: construct logfile2
+  lineinfile:
+    path: /etc/monit/config.log
+    insertafter: EOF
+    state: present
+    create: yes
+    line: "{{ item }}"
+  with_items:
+    - "{{ services_by_templates }}"
+
+
+logtator
+# - name: construct logfile
+#   lineinfile:
+#     path: /etc/monit/config.log
+#     insertafter: EOF
+#     state: present
+#     create: yes
+#     line: "{{ item.title }}\nDATE: {{ item.date }}\n{{ item.list }}\n"
+#   with_items:
+#     - title: "{{ title }}"
+#       date: "{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
+#       list: "{{ info_var.stdout }}"
+#   when: flg == "ls"
+
+conf
+- include_tasks: logtator.yml
+  vars:
+    title: "{{ xitem.title }}"
+    info_var: "{{ xitem.info_var }}"
+    flg: "ls"
+  when: "{{ xitem.when }}"
+  with_items:
+    - title: "Available Configuration Templates"
+      info_var: "{{ conf_available }}"
+      when: conf_available|succeeded
+    - title: "Services Running on the SO"
+      info_var: "{{ systemctl_services }}"
+      when: systemctl_services|succeeded
+    - title: "Services by Full Templates"
+      info_var: "{{ services_by_templates }}"
+      when: services_by_templates|succeeded
+    - title: "Services by Basic Autotemplates"
+      info_var: "{{ services_by_autotemplates }}"
+      when: services_by_autotemplates|succeeded
+  loop_control:
+    loop_var: xitem

@@ -3,7 +3,10 @@
    group smartd
    start program = "/etc/init.d/smartmontools start"
    stop  program = "/etc/init.d/smartmontools stop"
+   if changed pid then {{ slack_ale }}
    if 5 restarts with 5 cycles then timeout
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend smartd_bin
    depend smartd_rc
 

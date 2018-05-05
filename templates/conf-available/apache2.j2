@@ -3,8 +3,11 @@
    group apache
    start program = "/etc/init.d/apache2 start"
    stop program  = "/etc/init.d/apache2 stop"
+   if changed pid then {{ slack_ale }}
    if 4 restarts within 20 cycles then timeout
    if failed host localhost port 80 with protocol http and request "/server-status" with timeout 25 seconds for 4 times within 5 cycles then restart
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend apache_bin
    depend apache_rc
 

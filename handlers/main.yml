@@ -5,3 +5,5 @@
     name: monit
     state: restarted
 
+- name: reload_monit
+  command: "monit reload"

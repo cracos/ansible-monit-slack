@@ -4,4 +4,8 @@
 
 - include_tasks: conf_base.yml
 
-- include_tasks: conf_ul_services.yml 
+- include_tasks: conf_auto.yml
+  when: monit_auto
+
+- include_tasks: conf_semi.yml
+  when: not monit_auto

@@ -1,5 +1,13 @@
 ---
 
+- name: install dependencies for slack alerts
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+  with_items:
+    - python3
+    - curl
+
 - name: CONF_BASE | Ensure monit can start
   lineinfile:
     dest: "{{ monit_init_file }}"
@@ -18,12 +26,47 @@
     - conf-available/basic
     - conf.d
 
-- name: CONF_BASE | Update the monit configuration (/etc/monit/monitrc)
+- name: CONF_BASE | copy slack alert & report files
   template:
-    src: "monitrc"
-    dest: "{{ monit_path }}monitrc"
-    mode: 0600
+    src: "{{ item.src }}"
+    dest: "{{ monit_path }}{{ item.dest }}"
+    mode: "{{ item.mode }}"
     owner: root
     group: root
-  notify:
-    - restart monit
+  with_items:
+    - {src: 'slackAlert.sh.j2', dest: 'slackAlert.sh', mode: '0755'}
+    - {src: 'slackReport.sh.j2', dest: 'slackReport.sh', mode: '0755'}
+    - {src: 'monitrc.j2', dest: 'monitrc', mode: '0600'}
+
+- name: CONF_BASE | copy conf-available service templates
+  template:
+    src: "{{ item }}"
+    dest: "{{ monit_path }}conf-available/{{ item | basename | regex_replace('.j2','')}}"
+    mode: 0644
+    owner: root
+    group: root
+  with_fileglob:
+    - ../templates/conf-available/*.*
+
+- name: CONF_BASE | copy root templates
+  template:
+    src: "{{ item }}"
+    dest: "{{ monit_path }}templates/{{ item | basename | regex_replace('.j2','')}}"
+    mode: 0644
+    owner: root
+    group: root
+  with_fileglob:
+    - ../templates/rootemplates/*.*
+
+- name: CONF_BASE | scan conf-enabled 
+  shell: ls /etc/monit/conf-enabled/
+  register: conf_en
+
+- name: CONF_BASE | delete symlinks
+  file:
+    dest: "{{ monit_path }}conf-enabled/{{ item }}"
+    state: absent
+    owner: root
+    group: root
+  with_items:
+    - "{{ conf_en.stdout_lines }}"

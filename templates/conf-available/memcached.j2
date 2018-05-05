@@ -3,10 +3,13 @@
    group memcached
    start program = "/etc/init.d/memcached start"
    stop program  = "/etc/init.d/memcached stop"
+   if changed pid then {{ slack_ale }}
    if failed host 127.0.0.1 port 11211 and protocol memcache then restart
    if cpu > 60% for 2 cycles then alert
    if cpu > 98% for 5 cycles then restart
    if 5 restarts within 20 cycles then timeout
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend memcache_bin
    depend memcache_rc
 

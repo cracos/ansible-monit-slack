@@ -4,23 +4,22 @@ monit_init_file: /etc/default/monit
 monit_path: /etc/monit/
 
 ## MONIT SERVICES
-monit_auto: no
+monit_auto: yes
 monit_banned:
   - getty@tty1
   - ifup@eth0
   - networking
+  - monit
+  - user@0
 
 monit_process:
-  - ssh
-  - rsyslog
+  - tyk-gateway
+  - mongodb
   - nginx
-  - mysql
-  - exim4
+  - redis-server
+  - ssh
   - cron
-  - acpid
-  - atd
 
-monit_process_by_name: []
 monit_file: []
 monit_fifo: []
 monit_filesystem: []
@@ -30,3 +29,10 @@ monit_system: []
 monit_program: []
 monit_network: []
 monit_network_by_interface: []
+
+## SLACK
+slack_alert: "{{ monit_path }}slackAlert.sh"
+slack_report: "{{ monit_path }}slackReport.sh"
+slack_exa: "exec \"{{ slack_alert }}\" else if succeeded then exec \"{{ slack_alert }}\""
+slack_ale: "exec \"{{ slack_alert }}\""
+slack_url: https://hooks.slack.com/services/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

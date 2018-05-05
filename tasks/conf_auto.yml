@@ -1,0 +1,95 @@
+---
+
+- name: CONF_AUTO | scan conf-available 
+  shell: ls /etc/monit/conf-available/
+  register: conf_av
+
+- name: CONF_AUTO | systemctl-scan all running services on the OS 
+  shell: systemctl --type=service --state=running list-units | awk '/.service/ {gsub(".service","",$1); print $1}'
+  register: systemctl_serv
+    
+- set_fact:
+    conf_available: "{{ conf_av }}"
+    systemctl_services: "{{ systemctl_serv }}"
+
+- set_fact:
+    services_by_templates: "{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"  
+    services_by_autotemplates: "{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned ) }}"
+  
+- name: CONF_AUTO | enable services with TEMPLATES
+  file:
+    src: "{{ monit_path }}conf-available/{{ item }}"
+    dest: "{{ monit_path }}conf-enabled/{{ item }}"
+    state: link
+    owner: root
+    group: root
+  with_items:
+    - "{{ services_by_templates }}"
+
+- include_tasks: logtator.yml
+  vars:
+    flg: "ls"
+    type_conf: "auto"
+
+- name: CONF_AUTO | get services facts for untemplated services
+  systemd: 
+    name: "{{ item }}"
+    daemon_reload: yes
+  register: service_facts
+  with_items:
+    - "{{ services_by_autotemplates }}"
+
+- name: CONF_AUTO | search for PID's
+  shell: "cat /sys/fs/cgroup/systemd{{ item.status.ControlGroup }}/tasks | awk 'NR==1{print $1}'"
+  register: pid
+  with_items:
+    - "{{ service_facts.results }}"
+
+- set_fact:
+    pids: "{{ pid }}"
+
+- name: CONF_AUTO | PID's to names for procmatch
+  shell: "ps o command= {{ item.stdout }} | awk -v f=1 -v t=4 '{for(i=f;i<=t;i++) printf(\"%s%s\",$i,(i==t)?\"\\n\":OFS)}' | sed 's/ *$//'"
+  register: lin
+  with_items:
+    - "{{ pids.results }}"
+
+- set_fact:
+    lines: "{{ lin }}"
+
+- name: CONF_AUTO | create BASIC
+  blockinfile:
+    path: "{{ monit_path }}conf-available/basic/{{ item.item.item.name }}"
+    marker: "## <-- {mark} ANSIBLE MANAGED BLOCK -->"
+    block: |
+       check process {{ item.item.item.name }}
+          matching "{{ item.stdout }}"
+          start program  = "/usr/sbin/service {{ item.item.item.name }} start"
+          stop program  = "/usr/sbin/service {{ item.item.item.name }} stop"
+          if changed pid then {{ slack_ale }}
+          if cpu > 65% for 3 cycles then {{ slack_exa }}
+          if does not exist then restart
+          if does not exist then {{ slack_exa }}
+          if cpu > 90% for 6 cycles then restart
+          if cpu > 90% for 6 cycles then {{ slack_exa }}
+          if 3 restarts with 12 cycles then {{ slack_ale }}
+          if 3 restarts with 12 cycles then timeout
+    state: present
+    create: yes
+  with_items:
+    - "{{ lines.results }}"
+
+- name: CONF_AUTO | enable BASIC
+  file:
+    src: "{{ monit_path }}conf-available/basic/{{ item.item.item.name }}"
+    dest: "{{ monit_path }}conf-enabled/{{ item.item.item.name }}"
+    state: link
+    owner: root
+    group: root
+  with_items:
+    - "{{ lines.results }}"
+
+- include_tasks: logtator.yml
+  vars:
+    flg: "la"
+    type_conf: "auto"

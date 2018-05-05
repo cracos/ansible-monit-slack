@@ -1,0 +1,15 @@
+check process redis-server with pidfile "/run/redis/redis-server.pid"
+    start program = "/etc/init.d/redis-server start"
+    stop program = "/etc/init.d/redis-server stop"
+    if changed pid then {{ slack_ale }}
+    if does not exist then restart
+    if does not exist then {{ slack_exa }}
+    if totalmem > 100 Mb then {{ slack_exa }}
+    if children > 255 for 5 cycles then stop
+    if children > 255 for 5 cycles then {{ slack_exa }}
+    if cpu usage > 95% for 3 cycles then restart
+    if cpu usage > 95% for 3 cycles then {{ slack_exa }}t
+    if failed host localhost port 6379 then restart
+    if failed host localhost port 6379 then {{ slack_exa }}
+    if 5 restarts within 5 cycles then timeout
+    if 5 restarts within 5 cycles then {{ slack_ale }}

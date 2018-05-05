@@ -1,8 +1,16 @@
 ---
 
+- name: Add jessie-backports repository 
+  apt_repository:
+    repo: deb http://ftp.debian.org/debian jessie-backports main
+    state: present
+    update_cache: yes
+  when: ansible_distribution_release == "jessie"
+
 - name: Install monit package
   apt:
    name: monit
-   state: present
+   state: latest
+   default_release: jessie-backports
   become: yes
-
+  when: ansible_distribution_release == "jessie"

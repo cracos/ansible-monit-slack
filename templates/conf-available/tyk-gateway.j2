@@ -1,0 +1,18 @@
+check process tyk-gateway with pidfile "/opt/tyk-gateway/tyk-gateway.pid"
+    start program = "/usr/sbin/service tyk-gateway start"
+    stop program = "/usr/sbin/service tyk-gateway stop"
+    if changed pid then {{ slack_ale }}
+    #if failed host localhost port 59078 protocol http and request "/" with timeout 30 seconds then restart
+    #if failed host localhost port 59078 protocol http and request "/" with timeout 30 seconds then {{ slack_exa }}
+    if does not exist then restart
+    if does not exist then {{ slack_exa }}
+    if 5 restarts within 5 cycles then {{ slack_ale }}
+    if 5 restarts within 5 cycles then timeout
+    depend tyk_bin
+    depend tyk-gateway_rc
+
+check file tyk_bin with path /opt/tyk-gateway/tyk
+   include /etc/monit/templates/rootbin
+
+check file tyk-gateway_rc with path /lib/systemd/system/tyk-gateway.service
+   include /etc/monit/templates/rootrc

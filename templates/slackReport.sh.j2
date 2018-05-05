@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo Uptime
+echo '```'
+w
+echo '```'
+
+echo Network
+echo '```'
+sudo netstat -nlput
+echo '```'
+
+echo Disk
+echo '```'
+df -h
+echo '```'
+
+echo Memory
+echo '```'
+free -h
+echo '```'
+
+echo Processes
+echo '```'
+ps auxf | egrep -v '\[.+\]'
+echo '```'

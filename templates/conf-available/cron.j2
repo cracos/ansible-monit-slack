@@ -3,7 +3,10 @@
    group crond
    start program = "/etc/init.d/cron start"
    stop  program = "/etc/init.d/cron stop"
+   if changed pid then {{ slack_ale }}
    if 5 restarts with 5 cycles then timeout
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend cron_bin
    depend cron_rc
    depend cron_spool

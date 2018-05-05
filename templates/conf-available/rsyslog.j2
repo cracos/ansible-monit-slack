@@ -3,7 +3,10 @@
    group rsyslogd
    start program = "/etc/init.d/rsyslog start"
    stop  program = "/etc/init.d/rsyslog stop"
+   if changed pid then {{ slack_ale }}
    if 5 restarts with 5 cycles then timeout
+   if does not exist then restart
+   if does not exist then {{ slack_exa }}
    depend on rsyslogd_bin
    depend on rsyslogd_rc
    depend on rsyslog_file
