@@ -53,3 +53,6 @@ Or invoke the role in your playbook like:
     - role: Ansible-Monit-Slack
       become: yes
 ```
+## Custom Facts
+
+This role writes a log file about the results of a successful installation, showing a summary of the services configured and what mode was used to did it. The log file can be found in the path /etc/monit/rs.log
