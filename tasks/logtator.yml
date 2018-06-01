@@ -2,7 +2,7 @@
 
 - name: create log file
   file:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     state: touch
 
 - name: var time
@@ -11,7 +11,7 @@
 
 - name: lists for logfile
   lineinfile:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     insertafter: EOF
     state: present
     line: "[{{ date }}]  INFO  {{ item.title }} : conf={{ type_conf }} services={ {{ item.list }} }"
@@ -32,7 +32,7 @@
 
 - name: characteristics logfile
   lineinfile:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     insertafter: EOF
     state: present
     line: "[{{ date }}] INFO autotemp services : conf={{ type_conf }} NAME={{ item.0.item.item.name }} PID={{ item.1.stdout }} PROCMATCH={{ item.0.stdout }}"
