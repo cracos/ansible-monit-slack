@@ -13,8 +13,8 @@
     systemctl_services: "{{ systemctl_serv }}"
 
 - set_fact:
-    services_by_templates: "{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"  
-    services_by_autotemplates: "{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned ) }}"
+    services_by_templates: "{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"  
+    services_by_autotemplates: "{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"
   
 - name: CONF_AUTO | enable services with TEMPLATES
   file:

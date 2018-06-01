@@ -17,9 +17,9 @@
     line: "[{{ date }}]  INFO  {{ item.title }} : conf={{ type_conf }} services={ {{ item.list }} }"
   with_items:
     - title: "services by user"
-      list: "{{ monit_process | join(',') | default('-') }}"
+      list: "{{ monit_whitelist | join(',') | default('-') }}"
     - title: "Banned Services"
-      list: "{{ monit_banned | join(',') | default('-') }}"
+      list: "{{ monit_blacklist | join(',') | default('-') }}"
     - title: "Available Configuration Templates"
       list: "{{ conf_available.stdout_lines | join(',') }}"
     - title: "Services Running on the SO"

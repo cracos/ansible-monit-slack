@@ -5,7 +5,7 @@
 - include_tasks: conf_base.yml
 
 - include_tasks: conf_auto.yml
-  when: monit_auto
+  when: monit_config_mode
 
 - include_tasks: conf_semi.yml
-  when: not monit_auto
+  when: not monit_config_mode

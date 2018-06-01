@@ -11,10 +11,10 @@
 #   debug: msg="{{ systemctl_services.stdout_lines }}"
 
 # - name: list by user
-#   debug: msg="{{ monit_process }}"
+#   debug: msg="{{ monit_whitelist }}"
 
 # - name: banned list
-#   debug: msg="{{ monit_banned }}"
+#   debug: msg="{{ monit_blacklist }}"
 
 # - name: running systctl&service
 #   debug: msg="{{ systemctl_services.stdout_lines }}"
@@ -23,18 +23,18 @@
 #   debug: msg="{{ conf_available.stdout_lines }}"
 
 # - name: running AUTO template
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"
-#   when: monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"
+#   when: monit_config_mode
 
 # - name: running AUTO basic
-#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned )}}"
-#   when: monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_blacklist )}}"
+#   when: monit_config_mode
 
 # - name: running SEMI-AUTO templates
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_whitelist | sort | intersect( conf_available.stdout_lines )) | difference( monit_blacklist ) }}"
 
 # - name: running SEMI-AUTO basic
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_whitelist | sort | difference( conf_available.stdout_lines )) | difference( monit_blacklist ) }}"
 
 #for the process id number to obtain command for monit procmatch
 # ps o command= 422 | awk -v f=1 -v t=4 '{for(i=f;i<=t;i++) printf("%s%s",$i,(i==t)?"\n":OFS)}' | sed 's/ *$//'
@@ -57,29 +57,29 @@
 #   debug: msg="{{ systemctl_services.stdout_lines }}"
 
 # - name: list by user
-#   debug: msg="{{ monit_process }}"
+#   debug: msg="{{ monit_whitelist }}"
 
 # - name: banned list
-#   debug: msg="{{ monit_banned }}"
+#   debug: msg="{{ monit_blacklist }}"
 
 # - name: available templates
 #   debug: msg="{{ conf_available.stdout_lines }}"
 
 # - name: running AUTO template
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_banned ) }}"
-#   when: monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"
+#   when: monit_config_mode
 
 # - name: running AUTO basic
-#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_banned ) }}"
-#   when: monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"
+#   when: monit_config_mode
 
 # - name: running SEMI templates
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) | difference( monit_banned ) }}"
-#   when: not monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_whitelist | sort | intersect( conf_available.stdout_lines )) | difference( monit_blacklist ) }}"
+#   when: not monit_config_mode
 
 # - name: running SEMI basic
-#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) | difference( monit_banned ) }}"
-#   when: not monit_auto
+#   debug: msg="{{ systemctl_services.stdout_lines | intersect( monit_whitelist | sort | difference( conf_available.stdout_lines )) | difference( monit_blacklist ) }}"
+#   when: not monit_config_mode
 
 # - name: systemctl
 #   systemd: state=started name=nginx
