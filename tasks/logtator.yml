@@ -2,7 +2,7 @@
 
 - name: create log file
   file:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     state: touch
 
 - name: var time
@@ -11,15 +11,15 @@
 
 - name: lists for logfile
   lineinfile:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     insertafter: EOF
     state: present
     line: "[{{ date }}]  INFO  {{ item.title }} : conf={{ type_conf }} services={ {{ item.list }} }"
   with_items:
     - title: "services by user"
-      list: "{{ monit_process | join(',') | default('-') }}"
+      list: "{{ monit_whitelist | join(',') | default('-') }}"
     - title: "Banned Services"
-      list: "{{ monit_banned | join(',') | default('-') }}"
+      list: "{{ monit_blacklist | join(',') | default('-') }}"
     - title: "Available Configuration Templates"
       list: "{{ conf_available.stdout_lines | join(',') }}"
     - title: "Services Running on the SO"
@@ -32,7 +32,7 @@
 
 - name: characteristics logfile
   lineinfile:
-    path: /etc/monit/config.log
+    path: /etc/monit/rs.log
     insertafter: EOF
     state: present
     line: "[{{ date }}] INFO autotemp services : conf={{ type_conf }} NAME={{ item.0.item.item.name }} PID={{ item.1.stdout }} PROCMATCH={{ item.0.stdout }}"

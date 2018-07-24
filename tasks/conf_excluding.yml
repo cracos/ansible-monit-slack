@@ -1,22 +1,22 @@
 ---
 
-- name: CONF_SEMI | scan conf-available 
+- name: CONF_AUTO | scan conf-available 
   shell: ls /etc/monit/conf-available/
   register: conf_av
 
-- name: CONF_SEMI | systemctl-scan all running services on the OS 
+- name: CONF_AUTO | systemctl-scan all running services on the OS 
   shell: systemctl --type=service --state=running list-units | awk '/.service/ {gsub(".service","",$1); print $1}'
   register: systemctl_serv
-
+    
 - set_fact:
     conf_available: "{{ conf_av }}"
     systemctl_services: "{{ systemctl_serv }}"
 
 - set_fact:
-    services_by_templates: "{{ systemctl_services.stdout_lines | intersect( monit_process | sort | intersect( conf_available.stdout_lines )) | difference( monit_banned ) }}"  
-    services_by_autotemplates: "{{ systemctl_services.stdout_lines | intersect( monit_process | sort | difference( conf_available.stdout_lines )) | difference( monit_banned ) }}"
+    services_by_templates: "{{ systemctl_services.stdout_lines | intersect( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"  
+    services_by_autotemplates: "{{ systemctl_services.stdout_lines | difference( conf_available.stdout_lines ) | difference( monit_blacklist ) }}"
   
-- name: CONF_SEMI | enable services with TEMPLATES
+- name: CONF_AUTO | enable services with TEMPLATES
   file:
     src: "{{ monit_path }}conf-available/{{ item }}"
     dest: "{{ monit_path }}conf-enabled/{{ item }}"
@@ -29,9 +29,9 @@
 - include_tasks: logtator.yml
   vars:
     flg: "ls"
-    type_conf: "semi"
+    type_conf: "auto"
 
-- name: CONF_SEMI | get services facts for untemplated services
+- name: CONF_AUTO | get services facts for untemplated services
   systemd: 
     name: "{{ item }}"
     daemon_reload: yes
@@ -39,7 +39,7 @@
   with_items:
     - "{{ services_by_autotemplates }}"
 
-- name: CONF_SEMI | search for PID's
+- name: CONF_AUTO | search for PID's
   shell: "cat /sys/fs/cgroup/systemd{{ item.status.ControlGroup }}/tasks | awk 'NR==1{print $1}'"
   register: pid
   with_items:
@@ -48,7 +48,7 @@
 - set_fact:
     pids: "{{ pid }}"
 
-- name: CONF_SEMI | PID's to names for procmatch
+- name: CONF_AUTO | PID's to names for procmatch
   shell: "ps o command= {{ item.stdout }} | awk -v f=1 -v t=4 '{for(i=f;i<=t;i++) printf(\"%s%s\",$i,(i==t)?\"\\n\":OFS)}' | sed 's/ *$//'"
   register: lin
   with_items:
@@ -57,7 +57,7 @@
 - set_fact:
     lines: "{{ lin }}"
 
-- name: CONF_SEMI | create BASIC 
+- name: CONF_AUTO | create BASIC
   blockinfile:
     path: "{{ monit_path }}conf-available/basic/{{ item.item.item.name }}"
     marker: "## <-- {mark} ANSIBLE MANAGED BLOCK -->"
@@ -79,7 +79,7 @@
   with_items:
     - "{{ lines.results }}"
 
-- name: CONF_SEMI | enable BASIC
+- name: CONF_AUTO | enable BASIC
   file:
     src: "{{ monit_path }}conf-available/basic/{{ item.item.item.name }}"
     dest: "{{ monit_path }}conf-enabled/{{ item.item.item.name }}"
@@ -92,4 +92,4 @@
 - include_tasks: logtator.yml
   vars:
     flg: "la"
-    type_conf: "semi"
+    type_conf: "auto"

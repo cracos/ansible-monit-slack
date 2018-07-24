@@ -1,5 +1,7 @@
 # Ansible-Monit-Slack
 
+**WARNING** this role although functional is still under construction and improvements therefore it may fail in some cases
+
 Ansible role for install and configure only daemonized services and his dependencies to monitor them with Monit, and Slack as an alert service system. Using Service Configuration Templates (SCT) and the possibility to auto generate Basic Service Configuration Templates when the SCT of the specified service are not available.
 
 * [Requirements](#requirements)
@@ -7,7 +9,6 @@ Ansible role for install and configure only daemonized services and his dependen
 * [Preconfigure Slack](#preconfigure-slack)
 * [Role Variables](#role-variables)
 * [Install](#install)
-
 
 ## Requirements
 
@@ -24,15 +25,17 @@ There are two modes for configure the required services for your system:
 
 ## Preconfigure Slack
 
-Any of the modes you chose you need to get the url of your Slack team channel for post the system alerts,  to obtain it you need to create a new Incoming WebHook. You can do that by going to: 
-* https://\<yourteam\>.slack.com/services/new/incoming-webhook
+Any of the modes you chose you need to get the url of your Slack team channel for post the system alerts,  to obtain it you need to create a new Incoming WebHook. You can do that by going to:
+
+* `https://<yourteam>.slack.com/services/new/incoming-webhook`
 * Coose or create a channel
 * Then click on Add incoming WebHooks Integration
-* Then you will see a Webhook URL that should be similar to this: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzZzzzzzzzZzzzzzzzzzzzz
-
+* Then you will see a Webhook URL that should be similar to this: `https://hooks.slack.com/services/XX/YY/zz`
 
 ## Role Variables
+
 You need to update the content of this role variables with the value according to your needs. These variables are in the main.yml file of the folder named defaults within the role
+
 * `monit_config_mode`: Monit Excluding or Selective mode to configure the services.  
  `monit_config_mode: yes`= Excluding mode  
  `monit_config_mode: no`= Selective mode
@@ -42,11 +45,12 @@ You need to update the content of this role variables with the value according t
 
 ## Install
 
-Run it in a playbook with a global `become: yes` like: 
+Run it in a playbook with a global `become: yes` like:
 
     - { role: Ansible-Monit-Slack, become: yes, tags: Monit }
 
 Or invoke the role in your playbook like:
+
 ```yaml
 - hosts: foo
   roles:

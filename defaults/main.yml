@@ -4,22 +4,25 @@ monit_init_file: /etc/default/monit
 monit_path: /etc/monit/
 
 ## MONIT SERVICES
-monit_auto: yes
-monit_banned:
+
+## monit_config_mode: yes = Excluding mode
+## monit_config_mode: no = Selective mode
+monit_config_mode: yes
+
+## Used for both modes (Excluding & Selective)
+monit_blacklist:
   - getty@tty1
   - ifup@eth0
   - networking
   - monit
   - user@0
 
-monit_process:
-  - tyk-gateway
-  - mongodb
-  - nginx
-  - redis-server
+## Used only for Selective mode
+monit_whitelist:
   - ssh
   - cron
 
+## Future works...
 monit_file: []
 monit_fifo: []
 monit_filesystem: []
@@ -31,8 +34,10 @@ monit_network: []
 monit_network_by_interface: []
 
 ## SLACK
+## change with your WebHook url of your Slack team channel
+slack_url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzZzzzzzzzZzzzzzzzzzzzz
+
 slack_alert: "{{ monit_path }}slackAlert.sh"
 slack_report: "{{ monit_path }}slackReport.sh"
 slack_exa: "exec \"{{ slack_alert }}\" else if succeeded then exec \"{{ slack_alert }}\""
 slack_ale: "exec \"{{ slack_alert }}\""
-slack_url: https://hooks.slack.com/services/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
