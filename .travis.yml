@@ -1,0 +1,37 @@
+---
+
+# Ensure Python 2.7.x is being used
+dist: 'trusty'
+language: 'python'
+python: '2.7'
+env:
+  matrix:
+    - ANSIBLE_VERSION="2.6.1-1ppa~trusty"
+    # - ANSIBLE_VERSION=""
+
+# blocklist
+branches:
+  except:
+  - master
+
+# safelist
+branches:
+  only:
+  - development
+
+# Use system installed packages inside of the Virtual environment
+virtualenv:
+  system_site_packages: True
+
+# Skip running these which boosts the Travis boot time
+before_install:
+  - sudo echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+  - sudo apt-get update
+install: 
+  - sudo apt-get install ansible=="$ANSIBLE_VERSION"
+
+script:
+  - echo localhost > inventory
+  - ansible-playbook -i inventory test.yml --syntax-check
+  - ansible-playbook -i inventory test.yml --connection=local --sudo
