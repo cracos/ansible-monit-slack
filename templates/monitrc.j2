@@ -3,7 +3,7 @@
 ## Global section
 ###############################################################################
 
-set daemon 180
+set daemon 60
   with start delay 60
 
 set logfile /var/log/monit.log
@@ -16,13 +16,13 @@ set eventqueue
   basedir /var/lib/monit/events
   slots 100
 
-set httpd port 5000
+set httpd port 2812
   allow localhost
   allow admin:pass
-  allow guest:guest read-only
+  # allow guest:guest read-only
   allow 0.0.0.0/0.0.0.0
 
-set alert admeg@autlook.com
+# set alert email@outlook.com
 
 ###############################################################################
 ## Services
