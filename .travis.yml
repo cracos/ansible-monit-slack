@@ -1,13 +1,31 @@
 ---
 
-# Ensure Python 2.7.x is being used
-dist: 'trusty'
 language: 'python'
 python: '2.7'
-env:
-  matrix:
-    - ANSIBLE_VERSION="2.6.1-1ppa~trusty"
-    # - ANSIBLE_VERSION=""
+
+script:
+  - echo localhost > inventory
+  - ansible-playbook -i inventory test.yml --syntax-check
+  - ansible-playbook -i inventory test.yml --connection=local --become
+
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: 'trusty'
+      before_install:
+        - sudo add-apt-repository ppa:ansible/ansible -y
+        - sudo apt-get update -q
+      install: 
+        - sudo apt-get install ansible=2.6.1-1ppa~trusty
+    - os: linux
+      sudo: required
+      dist: 'precise'
+      before_isntall:
+        - sudo add-apt-repository ppa:ansible/ansible -y
+        - sudo apt-get update -q
+      install:
+        - sudo apt-get install ansible=2.5.0-1ppa~precise
 
 # blocklist
 branches:
@@ -22,15 +40,3 @@ branches:
 # Use system installed packages inside of the Virtual environment
 virtualenv:
   system_site_packages: True
-
-# Skip running these which boosts the Travis boot time
-before_install:
-  - sudo add-apt-repository ppa:ansible/ansible -y
-  - sudo apt-get update -q
-install: 
-  - sudo apt-get install ansible="$ANSIBLE_VERSION"
-
-script:
-  - echo localhost > inventory
-  - ansible-playbook -i inventory test.yml --syntax-check
-  - ansible-playbook -i inventory test.yml --connection=local --become
