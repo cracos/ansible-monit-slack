@@ -18,7 +18,7 @@ matrix:
         - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
       install: 
-        - sudo apt-get install ansible
+        - sudo apt-get install ansible=2.6.1-1ppa~trusty
         - ansible --version
     - os: linux
       sudo: required
@@ -27,8 +27,11 @@ matrix:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
       install:
-        - sudo apt-get install ansible
+        - apt-cache policy ansible
+        - sudo apt-get install ansible=2.5.0-1ppa~precise
         - ansible --version
+        - apt-cache policy ansible
+
 
 # blocklist
 branches:
