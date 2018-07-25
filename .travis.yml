@@ -20,7 +20,6 @@ matrix:
       install: 
         - sudo apt-get install ansible=2.6.1-1ppa~trusty
         - ansible --version
-  include:
     - os: linux
       sudo: required
       dist: precise
@@ -28,6 +27,16 @@ matrix:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
         - sudo apt-get install ansible=2.5.0-1ppa~precise
+        - ansible --version
+  include:
+    - os: linux
+      sudo: required
+      dist: xenial
+      before_install:
+        - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
+        - sudo apt-get update -q
+      install: 
+        - sudo apt-get install ansible=2.6.1-1ppa~xenial
         - ansible --version
 
 # blocklist
