@@ -13,7 +13,7 @@ matrix:
   exclude:
     - os: linux
       sudo: required
-      dist: 'trusty'
+      dist: trusty
       before_install:
         - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
@@ -23,7 +23,7 @@ matrix:
   include:
     - os: linux
       sudo: required
-      dist: 'precise'
+      dist: precise
       install:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
