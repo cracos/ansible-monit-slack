@@ -10,7 +10,7 @@ script:
   - monit -V
 
 matrix:
-  include:
+  exclude:
     - os: linux
       sudo: required
       dist: 'trusty'
@@ -20,13 +20,13 @@ matrix:
       install: 
         - sudo apt-get install ansible=2.6.1-1ppa~trusty
         - ansible --version
+  include:
     - os: linux
       sudo: required
       dist: 'precise'
-      before_isntall:
+      install:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
-      install:
         - apt-cache policy ansible
         - sudo apt-get install ansible=2.5.0-1ppa~precise
         - ansible --version
