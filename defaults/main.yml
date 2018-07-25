@@ -7,7 +7,7 @@ monit_path: /etc/monit/
 
 ## monit_config_mode: yes = Excluding mode
 ## monit_config_mode: no = Selective mode
-monit_config_mode: yes
+monit_config_mode: no
 
 ## Used for both modes (Excluding & Selective)
 monit_blacklist:
@@ -16,6 +16,8 @@ monit_blacklist:
   - networking
   - monit
   - user@0
+  - user@2000
+  - 'user@2000:2:'
 
 ## Used only for Selective mode
 monit_whitelist:
@@ -35,7 +37,8 @@ monit_network_by_interface: []
 
 ## SLACK
 ## change with your WebHook url of your Slack team channel
-slack_url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzZzzzzzzzZzzzzzzzzzzzz
+#slack_url: https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzZzzzzzzzZzzzzzzzzzzzz
+slack_url: https://hooks.slack.com/services/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
 
 slack_alert: "{{ monit_path }}slackAlert.sh"
 slack_report: "{{ monit_path }}slackReport.sh"
