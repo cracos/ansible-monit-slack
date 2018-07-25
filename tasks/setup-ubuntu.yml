@@ -1,0 +1,6 @@
+---
+- name: Install monit package
+  apt:
+    name: monit
+    state: latest
+  become: yes

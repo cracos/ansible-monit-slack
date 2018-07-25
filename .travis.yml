@@ -33,4 +33,4 @@ install:
 script:
   - echo localhost > inventory
   - ansible-playbook -i inventory test.yml --syntax-check
-  - ansible-playbook -i inventory test.yml --connection=local --sudo
+  - ansible-playbook -i inventory test.yml --connection=local --become

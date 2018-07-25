@@ -1,6 +1,10 @@
 ---
 
 - include_tasks: setup-Debian.yml
+  when: ansible_distribution_release == "jessie"
+
+- include_tasks: setup-ubuntu.yml
+  when: ansible_distribution_release == "trusty"
 
 - include_tasks: conf_base.yml
 
