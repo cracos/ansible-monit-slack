@@ -27,11 +27,8 @@ matrix:
       install:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
-        - apt-cache policy ansible
         - sudo apt-get install ansible=2.5.0-1ppa~precise
         - ansible --version
-        - apt-cache policy ansible
-
 
 # blocklist
 branches:
