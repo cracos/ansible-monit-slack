@@ -7,6 +7,7 @@ script:
   - echo localhost > inventory
   - ansible-playbook -i inventory test.yml --syntax-check
   - ansible-playbook -i inventory test.yml --connection=local --become
+  - monit --version
 
 matrix:
   include:
@@ -14,18 +15,20 @@ matrix:
       sudo: required
       dist: 'trusty'
       before_install:
-        - sudo add-apt-repository ppa:ansible/ansible -y
+        - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
       install: 
         - sudo apt-get install ansible=2.6.1-1ppa~trusty
+        - ansible --version
     - os: linux
       sudo: required
       dist: 'precise'
       before_isntall:
-        - sudo add-apt-repository ppa:ansible/ansible -y
+        - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
       install:
         - sudo apt-get install ansible=2.5.0-1ppa~precise
+        - ansible --version
 
 # blocklist
 branches:
