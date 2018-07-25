@@ -4,7 +4,7 @@
   when: ansible_distribution_release == "jessie"
 
 - include_tasks: setup-ubuntu.yml
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= 12.04'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version >= '12.04'
 
 - include_tasks: conf_base.yml
 
