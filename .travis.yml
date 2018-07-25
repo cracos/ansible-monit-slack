@@ -28,7 +28,7 @@ before_install:
   - sudo add-apt-repository ppa:ansible/ansible -y
   - sudo apt-get update -q
 install: 
-  - sudo apt-get install ansible=="$ANSIBLE_VERSION"
+  - sudo apt-get install ansible="$ANSIBLE_VERSION"
 
 script:
   - echo localhost > inventory
