@@ -5,7 +5,7 @@
    stop  program = "/etc/init.d/ssh stop"
    if changed pid then {{ slack_ale }}
    if failed host localhost port 22 with proto ssh then restart
-   if failed host localhost port 22 with proto ssh then {{ slack_exa }
+   if failed host localhost port 22 with proto ssh then {{ slack_exa }}
    if 5 restarts with 5 cycles then timeout
    if does not exist then restart
    if does not exist then {{ slack_exa }}
