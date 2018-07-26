@@ -40,12 +40,12 @@ matrix:
   include:
     - os: linux
       sudo: required
-      dist: artful
+      dist: bionic
       before_install:
         - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
       install: 
-        - sudo apt-get install ansible=2.6.1-1ppa~artful
+        - sudo apt-get install ansible=2.6.1-1ppa~bionic
         - ansible --version
 
 # blocklist
