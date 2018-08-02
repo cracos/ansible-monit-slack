@@ -10,7 +10,7 @@ script:
   - monit -V
 
 matrix:
-  exclude:
+  include:
     - os: linux
       sudo: required
       dist: precise
@@ -37,7 +37,7 @@ matrix:
       install: 
         - sudo apt-get install ansible=2.6.1-1ppa~xenial
         - ansible --version
-  include:
+  exclude:
     - os: linux
       sudo: required
       dist: jessie
