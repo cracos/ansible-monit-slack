@@ -25,6 +25,7 @@
     - conf-available/templates
     - conf-available/basic
     - conf.d
+    - templates
 
 - name: CONF_BASE | copy slack alert & report files
   template:
