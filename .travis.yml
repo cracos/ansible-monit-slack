@@ -17,7 +17,7 @@ matrix:
       install:
         - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
         - sudo apt-get update -q
-        - sudo apt-get install ansible=2.5.0-1ppa~precise
+        - sudo apt-get install ansible
         - ansible --version
     - os: linux
       sudo: required
@@ -26,7 +26,7 @@ matrix:
         - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
       install: 
-        - sudo apt-get install ansible=2.6.1-1ppa~trusty
+        - sudo apt-get install ansible
         - ansible --version
     - os: linux
       sudo: required
@@ -35,7 +35,7 @@ matrix:
         - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
       install: 
-        - sudo apt-get install ansible=2.6.1-1ppa~xenial
+        - sudo apt-get install ansible
         - ansible --version
   exclude:
     - os: linux
