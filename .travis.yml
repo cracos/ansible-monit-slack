@@ -5,8 +5,8 @@ python: '2.7'
 
 script:
   - echo localhost > inventory
-  - ansible-playbook -i inventory test.yml --syntax-check
-  - ansible-playbook -i inventory test.yml --connection=local --become
+  - ansible-playbook -i inventory tasks/main.yml --syntax-check
+  - ansible-playbook -i inventory tasks/main.yml --connection=local --become
   - monit -V
 
 matrix:
