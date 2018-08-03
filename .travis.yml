@@ -27,6 +27,38 @@ matrix:
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.3 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.2 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.1 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-1.9 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
   # exclude:
   #   - os: linux
   #     sudo: required
