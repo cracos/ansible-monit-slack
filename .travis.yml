@@ -20,7 +20,8 @@ env:
 
 
 
-- sudo: required
+- os: linux
+  sudo: required
   dist: trusty
   install:
     - sudo add-apt-repository ${PPA} -y
