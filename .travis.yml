@@ -10,17 +10,22 @@ script:
   - monit -V
 
 env:
-  matrix:
-    - PPA: ppa:ansible/ansible-2.6
-    - PPA: ppa:ansible/ansible-2.5
+  - DIST: precise
+    PPA: ppa:ansible/ansible-2.5
+  # - DIST: trusty
+  #   PPA: ppa:ansible/ansible-2.6
+
+  # matrix:
+  #   - PPA: ppa:ansible/ansible-2.6
+  #   - PPA: ppa:ansible/ansible-2.5
 
 matrix:
   include:
     - os: linux
       sudo: required
-      dist: precise
+      dist: ${DIST}
       install:
-        - sudo add-apt-repository $PPA -y
+        - sudo add-apt-repository ${PPA} -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
