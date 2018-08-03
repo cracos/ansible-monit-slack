@@ -9,25 +9,24 @@ script:
   - ansible-playbook -i inventory test.yml --connection=local --become
   - monit -V
 
-env:
-  - PPA: ppa:ansible/ansible-2.6
-  - PPA: ppa:ansible/ansible-2.5
-
-
-  # matrix:
-  #   - PPA: ppa:ansible/ansible-2.6
-  #   - PPA: ppa:ansible/ansible-2.5
-
-
-
-- os: linux
-  sudo: required
-  dist: trusty
-  install:
-    - sudo add-apt-repository ${PPA} -y
-    - sudo apt-get update -q
-    - sudo apt-get install ansible
-    - ansible --version
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+    - os: linux
+      sudo: required
+      dist: precise
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
   # exclude:
   #   - os: linux
   #     sudo: required
