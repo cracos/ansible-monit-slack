@@ -10,8 +10,10 @@ script:
   - monit -V
 
 env:
-  - PPA=ppa:ansible/ansible-2.6
-  - PPA= ppa:ansible/ansible-2.5
+  global:
+    - PPA: ppa:ansible/ansible-2.6
+  matrix:
+    - PPA: ppa:ansible/ansible-2.5
 
 matrix:
   include:
