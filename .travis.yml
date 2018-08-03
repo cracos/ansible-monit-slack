@@ -12,6 +12,7 @@ script:
 env:
   - DIST: precise
     PPA: ppa:ansible/ansible-2.5
+    PPA: ppa:ansible/ansible-2.6
   # - DIST: trusty
   #   PPA: ppa:ansible/ansible-2.6
 
