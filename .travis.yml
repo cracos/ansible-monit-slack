@@ -10,9 +10,8 @@ script:
   - monit -V
 
 env:
-  global:
-    - PPA: ppa:ansible/ansible-2.6
   matrix:
+    - PPA: ppa:ansible/ansible-2.6
     - PPA: ppa:ansible/ansible-2.5
 
 matrix:
@@ -25,34 +24,34 @@ matrix:
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
-  exclude:
-    - os: linux
-      sudo: required
-      dist: trusty
-      before_install:
-        - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
-        - sudo apt-get update -q
-      install: 
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      before_install:
-        - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
-        - sudo apt-get update -q
-      install: 
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: jessie
-      before_install:
-        - sudo add-apt-repository ppa:ansible/ansible -y
-        - sudo apt-get update -q
-      install: 
-        - sudo apt-get install ansible
-        - ansible --version
+  # exclude:
+  #   - os: linux
+  #     sudo: required
+  #     dist: trusty
+  #     before_install:
+  #       - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
+  #       - sudo apt-get update -q
+  #     install: 
+  #       - sudo apt-get install ansible
+  #       - ansible --version
+  #   - os: linux
+  #     sudo: required
+  #     dist: xenial
+  #     before_install:
+  #       - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
+  #       - sudo apt-get update -q
+  #     install: 
+  #       - sudo apt-get install ansible
+  #       - ansible --version
+  #   - os: linux
+  #     sudo: required
+  #     dist: jessie
+  #     before_install:
+  #       - sudo add-apt-repository ppa:ansible/ansible -y
+  #       - sudo apt-get update -q
+  #     install: 
+  #       - sudo apt-get install ansible
+  #       - ansible --version
 
 # blocklist
 branches:
