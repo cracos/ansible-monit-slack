@@ -14,59 +14,61 @@ matrix:
     - os: linux
       sudo: required
       dist: xenial
+      beforeinstall:
+        - pwd
       install:
         - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-2.3 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-2.2 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-2.1 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - sudo add-apt-repository  ppa:ansible/ansible-1.9 -y
-        - sudo apt-get update -q
-        - sudo apt-get install ansible
-        - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-2.3 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-2.2 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-2.1 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
+    # - os: linux
+    #   sudo: required
+    #   dist: xenial
+    #   install:
+    #     - sudo add-apt-repository  ppa:ansible/ansible-1.9 -y
+    #     - sudo apt-get update -q
+    #     - sudo apt-get install ansible
+    #     - ansible --version
   # exclude:
   #   - os: linux
   #     sudo: required
