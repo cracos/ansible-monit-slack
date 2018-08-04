@@ -9,11 +9,11 @@ script:
   - ansible-playbook -i inventory amsroletest/tests/test.yml --connection=local --become
   - monit -V
 
-env:
-  - REPOVER=ppa:ansible/ansible-2.3
+# env:
+#   - REPOVER=ppa:ansible/ansible-2.3
 
 install:
-        - sudo add-apt-repository  ${REPOVER} -y
+        - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
