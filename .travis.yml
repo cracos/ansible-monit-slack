@@ -5,8 +5,8 @@ python: '2.7'
 
 script:
   - echo localhost > inventory
-  - ansible-playbook -i inventory test.yml --syntax-check
-  - ansible-playbook -i inventory test.yml --connection=local --become
+  - ansible-playbook -i inventory amsroletest/tests/test.yml --syntax-check
+  - ansible-playbook -i inventory amsroletest/tests/test.yml --connection=local --become
   - monit -V
 
 matrix:
@@ -20,6 +20,11 @@ matrix:
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
+        - cd ..
+        - pwd=$(pwd)
+        - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
+        - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+
     # - os: linux
     #   sudo: required
     #   dist: xenial
