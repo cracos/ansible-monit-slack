@@ -13,20 +13,19 @@ env:
   - REPOVER=ppa:ansible/ansible-2.3
 
 install:
-        - sudo add-apt-repository  $REPOVER -y
+        - sudo add-apt-repository  ${REPOVER} -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
         - cd ..
-        - pwd=$(pwd)
-        - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
-        - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+        - git clone --branch=master https://github.com/cracos/amsroletest.git ${PWD}/amsroletest
+        - ln -s ${PWD}/ansible-monit-slack/ ${PWD}/amsroletest/roles
 
 matrix:
   include:
     - os: linux
       sudo: required
-      dist: xenial
+      dist: trusty
       # install:
       #   - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
       #   - sudo apt-get update -q
