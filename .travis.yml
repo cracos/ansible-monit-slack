@@ -9,14 +9,8 @@ script:
   - ansible-playbook -i inventory amsroletest/tests/test.yml --connection=local --become
   - monit -V
 
-matrix:
-  include:
-    - os: linux
-      sudo: required
-      dist: xenial
-      install:
-        - pwd
-        - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
+install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.3 -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
         - ansible --version
@@ -24,6 +18,21 @@ matrix:
         - pwd=$(pwd)
         - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
         - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: xenial
+      # install:
+      #   - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
+      #   - sudo apt-get update -q
+      #   - sudo apt-get install ansible
+      #   - ansible --version
+      #   - cd ..
+      #   - pwd=$(pwd)
+      #   - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
+      #   - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
 
     # - os: linux
     #   sudo: required
