@@ -14,9 +14,8 @@ matrix:
     - os: linux
       sudo: required
       dist: xenial
-      beforeinstall:
-        - pwd
       install:
+        - pwd
         - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
         - sudo apt-get update -q
         - sudo apt-get install ansible
