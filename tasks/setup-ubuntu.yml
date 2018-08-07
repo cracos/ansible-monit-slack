@@ -18,24 +18,24 @@
     mode: 0755
   with_items:
     - "{{ monit_path }}"
-    - "{{ monit_path }}"conf-enabled
-    - "{{ monit_path }}"conf-available/templates
-    - "{{ monit_path }}"conf-available/basic
-    - "{{ monit_path }}"conf.d
-    - "{{ monit_path }}"templates
+    - "{{ monit_path }}conf-enabled"
+    - "{{ monit_path }}conf-available/templates"
+    - "{{ monit_path }}conf-available/basic"
+    - "{{ monit_path }}conf.d"
+    - "{{ monit_path }}templates"
     - "/var/lib/monit/"
 
 - name: copy monitrc file
   template:
     src: monitrc.j2
-    dest: "{{ monit_path }}"monitrc
+    dest: "{{ monit_path }}monitrc"
     mode: '0600'
     owner: root
     group: root
 
 - name: create simlynk of monitrc
   file:
-    src: "{{ monit_path }}"monitrc
+    src: "{{ monit_path }}monitrc"
     dest: "/etc/monitrc"
     state: link
     owner: root
