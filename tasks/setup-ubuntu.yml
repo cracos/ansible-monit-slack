@@ -53,6 +53,7 @@
     line: "{{ item }}"
     insertbefore: EOF
     state: present
+    create: yes
   with_items:
     - "START=yes"
     - "startup=1"
