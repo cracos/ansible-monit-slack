@@ -15,6 +15,7 @@
     insertafter: EOF
     state: present
     line: "[{{ date }}]  INFO  {{ item.title }} : conf={{ type_conf }} services={ {{ item.list }} }"
+  notify: reload_monit
   with_items:
     - title: "services by user"
       list: "{{ monit_whitelist | join(',') | default('-') }}"
