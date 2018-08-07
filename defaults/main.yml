@@ -7,7 +7,7 @@ monit_path: /etc/monit/
 
 ## monit_config_mode: yes = Excluding mode
 ## monit_config_mode: no = Selective mode
-monit_config_mode: no
+monit_config_mode: yes
 
 ## Used for both modes (Excluding & Selective)
 monit_blacklist:
