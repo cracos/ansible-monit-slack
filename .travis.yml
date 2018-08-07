@@ -27,10 +27,10 @@ matrix:
   include:
     - os: linux
       sudo: required
-      dist: trusty
-    - os: linux
-      sudo: required
-      dist: precise
+      dist: xenial
+    # - os: linux
+    #   sudo: required
+    #   dist: precise
       # install:
       #   - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
       #   - sudo apt-get update -q
