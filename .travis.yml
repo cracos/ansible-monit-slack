@@ -8,9 +8,11 @@ script:
   - ansible-playbook -i inventory amsroletest/tests/test.yml --syntax-check
   - ansible-playbook -i inventory amsroletest/tests/test.yml --connection=local --become
   - monit -V
+  - monit summary
 
 env:
   - REPOVER=ppa:ansible/ansible-2.4
+  - REPOVER=ppa:ansible/ansible-2.5
 
 install:
         - sudo add-apt-repository  $REPOVER -y
