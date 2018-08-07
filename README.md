@@ -1,5 +1,7 @@
 # Ansible-Monit-Slack
 
+[![Build Status](https://travis-ci.com/cracos/ansible-monit-slack.svg?token=GVYvKcVTdsNrvpq9gs1N&branch=master)](https://travis-ci.com/cracos/ansible-monit-slack)
+
 **WARNING.** This role although functional is still under construction and improvements therefore it may fail in some cases
 
 Ansible role to install and configure daemonized-only services and his dependencies to monitor them with Monit, and use Slack as an alert system. Using Service Configuration Templates (SCT) and the possibility to auto generate Basic Service Configuration Templates when the SCT of the specified service are not available.
