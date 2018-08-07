@@ -1,6 +1,19 @@
----
+# ---
+# - name: Install monit package
+#   apt:
+#     name: monit
+#     state: latest
+#   become: yes
+
+- name: Add jessie-backports repository 
+  apt_repository:
+    repo: deb http://ftp.debian.org/debian jessie-backports main
+    state: present
+    update_cache: yes
+
 - name: Install monit package
   apt:
     name: monit
     state: latest
+    default_release: jessie-backports
   become: yes
