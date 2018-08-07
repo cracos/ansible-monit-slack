@@ -11,8 +11,9 @@ script:
   - sudo monit summary
 
 env:
-  # - REPOVER=ppa:ansible/ansible-2.4
+  - REPOVER=ppa:ansible/ansible-2.4
   - REPOVER=ppa:ansible/ansible-2.5
+  - REPOVER=ppa:ansible/ansible-2.6
 
 install:
         - sudo add-apt-repository  ${REPOVER} -y
@@ -28,9 +29,7 @@ matrix:
     - os: linux
       sudo: required
       dist: xenial
-    # - os: linux
-    #   sudo: required
-    #   dist: precise
+    
       # install:
       #   - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
       #   - sudo apt-get update -q
@@ -40,83 +39,6 @@ matrix:
       #   - pwd=$(pwd)
       #   - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
       #   - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
-
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-2.3 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-2.2 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-2.1 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-    # - os: linux
-    #   sudo: required
-    #   dist: xenial
-    #   install:
-    #     - sudo add-apt-repository  ppa:ansible/ansible-1.9 -y
-    #     - sudo apt-get update -q
-    #     - sudo apt-get install ansible
-    #     - ansible --version
-  # exclude:
-  #   - os: linux
-  #     sudo: required
-  #     dist: trusty
-  #     before_install:
-  #       - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
-  #       - sudo apt-get update -q
-  #     install: 
-  #       - sudo apt-get install ansible
-  #       - ansible --version
-  #   - os: linux
-  #     sudo: required
-  #     dist: xenial
-  #     before_install:
-  #       - sudo add-apt-repository ppa:ansible/ansible-2.6 -y
-  #       - sudo apt-get update -q
-  #     install: 
-  #       - sudo apt-get install ansible
-  #       - ansible --version
-  #   - os: linux
-  #     sudo: required
-  #     dist: jessie
-  #     before_install:
-  #       - sudo add-apt-repository ppa:ansible/ansible -y
-  #       - sudo apt-get update -q
-  #     install: 
-  #       - sudo apt-get install ansible
-  #       - ansible --version
 
 # blocklist
 branches:
