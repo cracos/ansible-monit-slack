@@ -1,0 +1,58 @@
+---
+language: 'python'
+python: '2.7'
+script:
+  - echo localhost > inventory
+  - ansible-playbook -i inventory amsroletest/tests/test.yml --syntax-check
+  - ansible-playbook -i inventory amsroletest/tests/test.yml --connection=local --become
+  - monit -V
+  - sudo monit summary
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: xenial
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.6 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+        - cd ..
+        - pwd=$(pwd)
+        - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
+        - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+    - os: linux
+      sudo: required
+      dist: xenial
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.5 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+        - cd ..
+        - pwd=$(pwd)
+        - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
+        - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+    - os: linux
+      sudo: required
+      dist: xenial
+      install:
+        - sudo add-apt-repository  ppa:ansible/ansible-2.4 -y
+        - sudo apt-get update -q
+        - sudo apt-get install ansible
+        - ansible --version
+        - cd ..
+        - pwd=$(pwd)
+        - git clone --branch=master https://github.com/cracos/amsroletest.git $pwd/amsroletest
+        - ln -s $pwd/ansible-monit-slack/ $pwd/amsroletest/roles
+# blocklist
+branches:
+  except:
+  - development
+# safelist
+branches:
+  only:
+  - master
+# Use system installed packages inside of the Virtual environment
+virtualenv:
+  system_site_packages: True
