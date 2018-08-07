@@ -58,6 +58,11 @@
     - "START=yes"
     - "startup=1"
 
-- name: start daemon monit service
-  command: sudo /etc/init.d/monit start
-  become: true
+# - name: start daemon monit service
+#   command: sudo /etc/init.d/monit start
+#   become_user: root
+
+- name: start service
+  service:
+    name: monit
+    state: started
