@@ -60,3 +60,4 @@
 
 - name: start daemon monit service
   command: /etc/init.d/monit start
+  become: true
