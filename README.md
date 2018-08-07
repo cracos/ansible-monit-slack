@@ -14,9 +14,10 @@ Ansible role to install and configure daemonized-only services and his dependenc
 
 ## Requirements
 
-   -- Debian based system (tested in Debian: jessie and Ubuntu: precise, trusty, Xenial)  
-   -- An Ansible ready host  
-   -- Daemonized services
+   -- Debian: jessie (8.10) and Ubuntu: Xenial (16.04)  
+   -- An Ansible ready host (Ansible 2.4 or up)  
+   -- systemd  
+   -- Daemonized and running services
 
 ## Role Variables
 
@@ -55,14 +56,14 @@ For any mode, an url of the Slack team channel is needed to post the system aler
 Run it in a playbook with a global `become: yes` like:
 
 ```yaml
-- { role: ansible-monit-slack, become: yes, tags: Monit }
+- { role: ansible-monit-slack, become: yes, tags: monit }
 ```
 
 Or invoke the role in your playbook like:
 
 ```yaml
 - hosts: foo
- roles:
+  roles:
    - role: ansible-monit-slack
      become: yes
 ```

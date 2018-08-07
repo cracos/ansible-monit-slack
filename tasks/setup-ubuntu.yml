@@ -1,7 +1,22 @@
 ---
+
+# - name: Add trusty-backports repository 
+#   apt_repository:
+#     repo: deb http://ppa.launchpad.net/suawekk/monit/ubuntu trusty main
+#     state: present
+#     update_cache: yes
+#   when: ansible_distribution_release == 'trusty'
+
+- name: Add xenial-backports repository 
+  apt_repository:
+    repo: deb http://ppa.launchpad.net/toddg/monit/ubuntu xenial main 
+    state: present
+    update_cache: yes
+  when: ansible_distribution_release == 'xenial'
+
 - name: Install monit package
   apt:
     name: monit
     state: latest
+    allow_unauthenticated: yes
   become: yes
-  

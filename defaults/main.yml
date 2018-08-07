@@ -10,12 +10,15 @@ monit_path: /etc/monit/
 monit_config_mode: no
 
 ## Used for both modes (Excluding & Selective)
+## !!DO NOT remove the services with "@" "at"!!
 monit_blacklist:
   - getty@tty1
   - ifup@eth0
+  - user@0
+  - user@2000
+  - serial-getty@ttyS0
   - networking
   - monit
-  - user@0
 
 ## Used only for Selective mode
 monit_whitelist:
