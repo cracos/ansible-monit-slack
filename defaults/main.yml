@@ -16,8 +16,8 @@ monit_blacklist:
   - networking
   - monit
   - user@0
-  - 'user@2000:2:'
-  - 'serial-getty@ttyS0:2:'
+  - user@2000
+  - serial-getty@ttyS0
 
 ## Used only for Selective mode
 monit_whitelist:
