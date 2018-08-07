@@ -66,3 +66,4 @@
   service:
     name: monit
     state: started
+  become: true
