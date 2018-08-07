@@ -1,19 +1,61 @@
-# ---
-# - name: Install monit package
-#   apt:
-#     name: monit
-#     state: latest
-#   become: yes
+---
 
-- name: Add jessie-backports repository 
-  apt_repository:
-    repo: deb http://ftp.debian.org/debian jessie-backports main
+- name: get and extract binary
+  unarchive:
+    src: https://mmonit.com/monit/dist/binary/5.25.2/monit-5.25.2-linux-x64.tar.gz
+    dest: /tmp
+    remote_src: yes
+  
+- name: copy bin folder
+  copy: 
+    src: /tmp/monit-5.25.2/bin/monit
+    dest: /usr/bin/monit
+
+- name: ensure needed paths exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ monit_path }}"
+    - "{{ monit_path }}"conf-enabled
+    - "{{ monit_path }}"conf-available/templates
+    - "{{ monit_path }}"conf-available/basic
+    - "{{ monit_path }}"conf.d
+    - "{{ monit_path }}"templates
+    - "/var/lib/monit/"
+
+- name: copy monitrc file
+  template:
+    src: monitrc.j2
+    dest: "{{ monit_path }}"monitrc
+    mode: '0600'
+    owner: root
+    group: root
+
+- name: create simlynk of monitrc
+  file:
+    src: "{{ monit_path }}"monitrc
+    dest: "/etc/monitrc"
+    state: link
+    owner: root
+    group: root
+
+- name: Download script file
+  get_url:
+    url: https://gist.githubusercontent.com/rahul286/9975061/raw/1aa107e62ecaaa2dacfdb61a12f13efb6f15005b/monit
+    dest: /etc/init.d/monit
+    mode: 0744
+
+- name: Modify init file
+  lineinfile:
+    dest: "{{ monit_init_file }}"
+    line: "{{ item }}"
+    insertbefore: EOF
     state: present
-    update_cache: yes
+  with_items:
+    - "START=yes"
+    - "startup=1"
 
-- name: Install monit package
-  apt:
-    name: monit
-    state: latest
-    default_release: jessie-backports
-  become: yes
+- name: start daemon monit service
+  command: /etc/init.d/monit start
