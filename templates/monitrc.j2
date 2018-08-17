@@ -12,17 +12,11 @@ set idfile /var/lib/monit/id
 
 set statefile /var/lib/monit/state
 
-set eventqueue
-  basedir /var/lib/monit/events
-  slots 100
-
 set httpd port 2812
   allow localhost
   allow admin:pass
   # allow guest:guest read-only
   allow 0.0.0.0/0.0.0.0
-
-# set alert email@outlook.com
 
 ###############################################################################
 ## Services
@@ -37,7 +31,6 @@ check system $HOST
   if cpu usage (user) > 70% for 2 cycles then {{ slack_exa }}
   if cpu usage (system) > 30% for 2 cycles then {{ slack_exa }}
   if cpu usage (wait) > 20% for 2 cycles then {{ slack_exa }}
-
 
 ###############################################################################
 ## Includes
